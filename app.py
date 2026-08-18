@@ -1,12 +1,11 @@
-import random
 import io
+import random
+import os
 import streamlit as st
-import ollama
+from groq import Groq
 from gtts import gTTS
 
-# ------------------------------------------------------------------------------
-# 1. Page Config & Custom Dynamic Styling
-# ------------------------------------------------------------------------------
+
 st.set_page_config(
     page_title="AI Mock Interviewer Pro",
     page_icon="⚡",
@@ -14,7 +13,7 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for Dynamic Visual Styling
+
 st.markdown("""
     <style>
     /* Gradient Background Cards */
@@ -61,10 +60,11 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# ------------------------------------------------------------------------------
-# 2. Configuration & Question Pools
-# ------------------------------------------------------------------------------
-OLLAMA_MODEL = "llama3"
+
+GROQ_MODEL = "openai/gpt-oss-20b"
+
+groq_api_key = st.secrets.get("GROQ_API_KEY", os.environ.get("GROQ_API_KEY"))
+groq_client = Groq(api_key=groq_api_key) if groq_api_key else None
 
 CONSTANT_HR_QUESTIONS = [
     "Tell me about yourself.",
@@ -2333,7 +2333,7 @@ with st.sidebar:
     st.title("Interview Coach Settings")
     st.markdown("---")
     
-    selected_model =OLLAMA_MODEL
+    selected_model =    GROQ_MODEL
     selected_role = st.selectbox(
         "🎯 Target Role:",
         options=list(DOMAIN_QUESTION_POOLS.keys())
@@ -2382,23 +2382,29 @@ FULL_QUESTION_BANK = st.session_state.selected_hr_questions + st.session_state.s
 total_q = len(FULL_QUESTION_BANK)
 
 
-def get_ollama_coaching(question, answer_text, model_name):
+def get_groq_coaching(question, answer_text, model_name):
+    if not groq_client:
+        return "⚠️ Groq API key is missing. Please set GROQ_API_KEY in secrets.toml."
     prompt = f"Target Role: {selected_role}\nQuestion: {question}\nCandidate Answer: {answer_text}\n\nProvide direct coaching feedback."
     try:
-        response = ollama.chat(
+        chat_completion = groq_client.chat.completions.create(
             model=model_name,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": prompt}
-            ]
+            ],
+            temperature=0.7
         )
-        return response['message']['content']
+        return chat_completion.choices[0].message.content
     except Exception as e:
-        return f"⚠️ Ollama Error: {str(e)}. Make sure Ollama is running locally."
+        return f"⚠️ Groq API Error: {str(e)}"
 
-def generate_ollama_report(transcript_history, model_name):
+def generate_groq_report(transcript_history, model_name):
     if not transcript_history:
         return "No session transcript available to analyze."
+    if not groq_client:
+        return "⚠️ Groq API key is missing. Please set GROQ_API_KEY in secrets.toml."
+    
     
     formatted_transcript = "\n\n".join(
         f"[{t['speaker']}]: {t['text']}" for t in transcript_history
@@ -2420,16 +2426,17 @@ ONE PRIORITY ACTION:
 - Single most critical focus before a real interview.
 """
     try:
-        response = ollama.chat(
+        chat_completion = groq_client.chat.completions.create(
             model=model_name,
             messages=[
                 {"role": "system", "content": SYSTEM_PROMPT},
                 {"role": "user", "content": prompt}
-            ]
+            ],
+            temperature=0.7
         )
-        return response['message']['content']
+        return chat_completion.choices[0].message.content
     except Exception as e:
-        return f"⚠️ Ollama Error: {str(e)}"
+        return f"⚠️ Groq API Error: {str(e)}"
 
 
 st.title("⚡ AI Interview Coach")
@@ -2498,7 +2505,7 @@ if q_idx < total_q:
             st.session_state.transcript.append({"speaker": f"Candidate ({category_tag})", "text": answer_text})
             
             with st.spinner("🤖 AI Coach is evaluating your answer structure and content..."):
-                feedback = get_ollama_coaching(current_q, answer_text, selected_model)
+                feedback = get_groq_coaching(current_q, answer_text, selected_model)
                 st.session_state.transcript.append({"speaker": "Coach", "text": feedback})
             
             if st.session_state.current_question_idx < total_q - 1:
@@ -2535,7 +2542,7 @@ with tab2:
 
     if generate_btn:
         with st.spinner("Analyzing overall session responses..."):
-            report = generate_ollama_report(st.session_state.transcript, selected_model)
+            report = generate_groq_report(st.session_state.transcript, selected_model)
             st.session_state.report = report
 
     if st.session_state.report:
