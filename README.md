@@ -9,9 +9,11 @@ The application was designed and developed by Raj Singh as a practical project f
 ---
 ## Live Demo
 
-The AI Interview Coach is available as a live web application:
+Try the deployed application:
 
 [Launch AI Interview Coach](https://interviewcoachpro.streamlit.app/)
+
+Note: The Streamlit Community Cloud app may temporarily go to sleep after a period of inactivity. If the app is sleeping, click "Yes, get this app back up!" to start it again.
 
 You can use the application to select a target role, practice HR and domain-specific interview questions, listen to questions using text-to-speech, record responses, receive AI-powered coaching feedback, and generate a final interview performance report.
 
