@@ -7,6 +7,13 @@ The project combines Generative AI, voice interaction, role-specific interview q
 The application was designed and developed by Raj Singh as a practical project focused on applying Generative AI to interview preparation and career development.
 
 ---
+## Live Demo
+
+The AI Interview Coach is available as a live web application:
+
+[Launch AI Interview Coach](https://interviewcoachpro.streamlit.app/)
+
+You can use the application to select a target role, practice HR and domain-specific interview questions, listen to questions using text-to-speech, record responses, receive AI-powered coaching feedback, and generate a final interview performance report.
 
 ## Project Overview
 
@@ -455,7 +462,7 @@ This structure would make the application easier to maintain as more interview d
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/AI-Interview-Coach.git
+https://github.com/thedataraj/AI-Interview-Coach.git
 ```
 
 Move into the project directory:
@@ -944,45 +951,6 @@ The application could identify repeated weaknesses and automatically focus futur
 
 ---
 
-## Security Considerations
-
-API credentials should never be stored directly in the source code.
-
-Use environment variables or Streamlit secrets instead.
-
-The following files should generally not be committed:
-
-```text
-.streamlit/secrets.toml
-.env
-```
-
-A `.gitignore` file should be included in the repository.
-
-Example:
-
-```gitignore
-# Environment
-.env
-venv/
-.venv/
-
-# Python
-__pycache__/
-*.pyc
-
-# Streamlit secrets
-.streamlit/secrets.toml
-
-# Operating system
-.DS_Store
-Thumbs.db
-```
-
-Before pushing the project to GitHub, always check the repository for accidentally exposed API keys or credentials.
-
----
-
 ## Why I Built This
 
 I built this project because interview preparation is not only about knowing the correct answer.
@@ -1093,55 +1061,6 @@ It is also intended to serve as a foundation for future development.
 The project can be extended into a more complete interview preparation platform with persistent user profiles, speech recognition, detailed analytics, resume parsing, job-description matching, and personalized interview plans.
 
 ---
-
-## Author
-
-**Raj Singh**
-
-Data Analytics and Generative AI Enthusiast
-
-Areas of interest include:
-
-* Data Analytics
-* Business Intelligence
-* Python
-* SQL
-* Power BI
-* Excel
-* Generative AI
-* AI-powered applications
-
-This project was designed, developed, and implemented by me as part of my practical work in Python, analytics, and Generative AI.
-
----
-
-## Disclaimer
-
-This application is intended for interview practice and educational purposes.
-
-AI-generated feedback should be treated as coaching assistance rather than a definitive assessment of a candidate's professional ability.
-
-The quality of feedback can vary depending on the model, prompt, candidate response, and available context.
-
----
-
-## License
-
-This project can be distributed under the MIT License.
-
-If you choose to use the MIT License, create a `LICENSE` file in the repository and include the standard MIT License text with the appropriate copyright year and author information.
-
----
-
-## Final Note
-
-This project represents an ongoing effort to explore practical applications of Generative AI.
-
-The objective was not simply to build another chatbot, but to create something that solves a specific problem: helping candidates practice interviews in a more interactive and structured way.
-
-There is still significant room for improvement, particularly around speech-to-text, detailed scoring, persistent user analytics, resume-based questioning, and personalized coaching.
-
-The current version provides the foundation for those improvements and demonstrates how several technologies can be combined into a single practical AI application.
 
 ## Author
 
